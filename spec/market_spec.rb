@@ -17,6 +17,7 @@ RSpec.describe Market do
     @vendor2.stock(@item4, 50)
     @vendor2.stock(@item3, 25)
     @vendor3.stock(@item1, 65)
+    @vendor3.stock(@item3, 10)
     @market = Market.new("South Pearl Street Farmers Market")
   end
 
@@ -60,6 +61,41 @@ RSpec.describe Market do
       @market.add_vendor(@vendor3)
       expect(@market.vendors_that_sell(@item1)).to eq([@vendor1, @vendor3])
       expect(@market.vendors_that_sell(@item4)).to eq([@vendor2])
+    end
+  end
+
+  describe "#total_inventory" do 
+    it "returns a hash with items for keys" do 
+      expect(@market.total_inventory).to be_a(Hash)
+      expect(@market.total_inventory.keys.all? { |key| key.class == Item }).to eq(true)
+    end
+
+    it "has a sub-hash for values, which include quantity: <int> and vendors: <array of vendors>" do 
+      @market.add_vendor(@vendor1)
+      @market.add_vendor(@vendor2)
+      @market.add_vendor(@vendor3)
+      expect(@market.total_inventory[@item1]).to eq({:quantity=>100, :vendors=>[@vendor1, @vendor3]})
+      expect(@market.total_inventory[@item2]).to eq({:quantity=>7, :vendors=>[@vendor1]})
+      expect(@market.total_inventory[@item3]).to eq({:quantity=>35, :vendors=>[@vendor2, @vendor3]})
+      expect(@market.total_inventory[@item4]).to eq({:quantity=>50, :vendors=>[@vendor2]})
+    end
+  end
+
+  describe "#overstocked_items" do 
+    it "returns a list 'overstocked' items (sold by more than 1 vendor, quantity > 50" do 
+      @market.add_vendor(@vendor1)
+      @market.add_vendor(@vendor2)
+      @market.add_vendor(@vendor3)
+      expect(@market.overstocked_items).to eq([@item1])
+    end
+  end
+
+  describe "#sorted_item_list" do 
+    it "returns a list of all items the vendor's have in stock, sorted alphabetically" do 
+      @market.add_vendor(@vendor1)
+      @market.add_vendor(@vendor2)
+      @market.add_vendor(@vendor3)
+      expect(@market.sorted_item_list).to eq(["Banana Nice Cream", "Peach", "Peach-Raspberry Nice Cream", "Tomato"])
     end
   end
 end 
