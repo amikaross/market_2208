@@ -34,7 +34,7 @@ RSpec.describe Market do
     end
   end 
 
-  decsribe "#add_vendor" do 
+  describe "#add_vendor" do 
     it "adds a given vendor to the markets list of vendors" do 
       @market.add_vendor(@vendor1)
       expect(@market.vendors).to eq([@vendor1])

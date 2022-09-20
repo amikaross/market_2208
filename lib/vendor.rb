@@ -1,5 +1,3 @@
-require "./lib/item"
-
 class Vendor 
   attr_reader :name,
               :inventory
