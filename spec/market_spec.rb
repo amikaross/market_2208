@@ -102,4 +102,26 @@ RSpec.describe Market do
       expect(@market.sorted_item_list).to eq(["Banana Nice Cream", "Peach", "Peach-Raspberry Nice Cream", "Tomato"])
     end
   end
+
+  describe "#sell" do 
+    it "returns false if there is not enough quantity" do 
+      @market.add_vendor(@vendor1)
+      @market.add_vendor(@vendor2)
+      @market.add_vendor(@vendor3)
+      item5 = Item.new({name: "Onion", price: "$0.25"})
+      expect(@market.sell(@item1, 200)).to eq(false)
+      expect(@market.sell(item5, 1)).to eq(false)
+    end
+
+    it "returns true if there's enough quantity and reduces the stock accordingly" do 
+      @market.add_vendor(@vendor1)
+      @market.add_vendor(@vendor2)
+      @market.add_vendor(@vendor3)
+      expect(@market.sell(@item4, 5)).to eq(true)
+      expect(@vendor3.check_stock(@item4)).to eq(45)
+      expect(@market.sell(@item1, 40)).to eq(true)
+      expect(@vendor1.check_stock(@item1)).to eq(0)
+      expect(@vendor3.check_stock(@item1)).to eq(60)
+    end
+  end
 end 
