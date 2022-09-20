@@ -45,4 +45,19 @@ class Market
     items = total_inventory.keys 
     items.map { |item| item.name }.sort
   end
+
+  def sell(item, quantity)
+    if !total_inventory.keys.include?(item) || total_inventory[item][:quantity] < quantity
+      false
+    else 
+      total_inventory[item][:vendors].each do |vendor|
+        until vendor.inventory[item] == 0 || quantity == 0
+          vendor.inventory[item] -= 1 
+          quantity -= 1
+        end
+        quantity > 0 ? next : break
+      end
+      true 
+    end
+  end
 end
