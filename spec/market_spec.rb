@@ -33,6 +33,10 @@ RSpec.describe Market do
     it "starts out with no vendors" do 
       expect(@market.vendors).to eq([])
     end
+
+    it "has a date" do 
+      expect(@market.date).to eq("2022-09-20")
+    end
   end 
 
   describe "#add_vendor" do 
