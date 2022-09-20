@@ -1,3 +1,5 @@
+require "./lib/item"
+
 class Vendor 
   attr_reader :name,
               :inventory
@@ -13,5 +15,13 @@ class Vendor
 
   def stock(item, quantity)
     @inventory[item] += quantity
+  end
+
+  def potential_revenue
+    sum = 0
+    @inventory.each do |item, quantity|
+      sum += item.price * quantity
+    end
+    sum
   end
 end
